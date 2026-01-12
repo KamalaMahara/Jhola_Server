@@ -4,7 +4,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": " nodemon --watch './src/**/*.ts' --exec 'ts-node' ./server.ts "
+    "dev": "nodemon --watch src --exec node --loader ts-node/esm ./server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -12,7 +14,9 @@
   "description": "",
   "dependencies": {
     "dotenv": "^17.2.3",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pg": "^8.16.3",
+    "sequelize-typescript": "^2.1.6"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

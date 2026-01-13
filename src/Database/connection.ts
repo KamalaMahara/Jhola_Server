@@ -1,7 +1,9 @@
 import { Sequelize } from 'sequelize-typescript';
 import { envConfig } from '../configuration/config.js';
-
-const sequelize = new Sequelize(envConfig.connectionString as string)
+import { User } from './Models/user.model.js';
+const sequelize = new Sequelize(envConfig.connectionString as string, {
+  models: [User]
+})
 
 try {
   sequelize.authenticate()
@@ -15,5 +17,13 @@ try {
 } catch (error) {
   console.log(error)
 }
+
+sequelize.sync({ force: true })  //
+  .then(() => {
+    console.log("All models were synchronized successfully.");
+  })
+  .catch((err) => {
+    console.log("Model synchronization ma error aayo", err);
+  });
 
 export default sequelize;

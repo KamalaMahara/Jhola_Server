@@ -1,7 +1,7 @@
 import { Table, Column, Model, DataType } from 'sequelize-typescript'
 @Table({
-  tableName: 'users', // yo table name vaneko supabase ko GUI ma dekhine name ho
-  modelName: 'user',  // yo chai hamro project vitra ko table lae acess garne name 
+  tableName: 'Users', // yo table name vaneko supabase ko GUI ma dekhine name ho
+  modelName: 'User',  // yo chai hamro project vitra ko table lae acess garne name 
   timestamps: true
 })
 
@@ -29,5 +29,11 @@ class User extends Model {
     type: DataType.STRING
   })
   declare password: string;
+
+  @Column({
+    type: DataType.ENUM('customer', 'admin'),
+    defaultValue: 'customer'
+  })
+  declare role: string;
 }
 export { User }

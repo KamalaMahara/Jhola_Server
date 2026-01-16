@@ -1,9 +1,8 @@
-import { Router } from 'express'
-import { AuthController } from '../Database/Models/controller/userController.js';
+import express from 'express'
+import AuthController from '../Database/Models/controller/userController.js'
+const router = express.Router()
 
-const router: Router = Router();
-const authController = new AuthController();
-
-router.post('/register', authController.registerUser)
+router.route("/register").post(AuthController.registerUser)
+router.route("/login").post(AuthController.loginUser)
 
 export default router

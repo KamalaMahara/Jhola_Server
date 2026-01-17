@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
 import { User } from "../user.model.js";
 import bcrypt from 'bcrypt';
+import generatetoken from "../../../services/generateToken.js";
+import generateToken from "../../../services/generateToken.js";
 
 class AuthController {
 
@@ -49,8 +51,10 @@ class AuthController {
         })
 
       } else {
+        const token = generateToken(user.id)
         res.status(200).json({
-          message: "logged in success 😊"
+          message: "logged in success 😊",
+          token
         })
       }
 

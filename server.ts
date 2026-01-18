@@ -1,5 +1,5 @@
-import app from './src/app.js'
-import { envConfig } from './src/configuration/config.js'
+import app from './src/app'
+import { envConfig } from './src/configuration/config'
 
 function startServer() {
   const port = envConfig.port || 4000;

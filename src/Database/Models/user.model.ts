@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, AllowNull } from 'sequelize-typescript'
 @Table({
   tableName: 'Users', // yo table name vaneko supabase ko GUI ma dekhine name ho
   modelName: 'User',  // yo chai hamro project vitra ko table lae acess garne name 
@@ -36,12 +36,23 @@ class User extends Model {
   })
   declare role: string;
   @Column({
-    type: DataType.STRING
+    type: DataType.STRING,
+    allowNull: true
+
   })
-  declare otp: string
+  declare otp: string | null
   @Column({
-    type: DataType.STRING
+    type: DataType.STRING,
+    allowNull: true
+
   })
-  declare otpGeneratedTime: string
+  declare otpGeneratedTime: string | null
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false
+
+  })
+  declare isOtpVerified: boolean
 }
 export { User }

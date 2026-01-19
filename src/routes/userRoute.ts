@@ -7,4 +7,8 @@ router.route("/login").post(AuthController.loginUser)
 
 router.route("/forgot-password").post(AuthController.forgotPassword)
 
+router.route("/verifyOtp").post(AuthController.verifyOtp)
+
+
+router.route("/resetpassword").post(AuthController.resetpassword)
 export default router

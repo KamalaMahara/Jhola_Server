@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { User } from "../user.model.js";
+import User from "../Database/models/user.model.js";
 import bcrypt from 'bcrypt';
-import generatetoken from "../../../services/generateToken.js";
-import generateToken from "../../../services/generateToken.js";
-import generateOtp from "../../../services/generateOtp.js";
-import sendMail from "../../../services/sendMail.js";
+import generatetoken from "../services/generateToken.js";
+import generateToken from "../services/generateToken.js";
+import generateOtp from "../services/generateOtp.js";
+import sendMail from "../services/sendMail.js";
 
 class AuthController {
 
@@ -13,6 +13,19 @@ class AuthController {
 
     if (!username || !email || !password || !role) {
       return res.status(400).json({ message: "All fields are required." });
+    }
+
+    //check whether the email is already registered or not
+    const [data] = await User.findAll({
+      where: {
+        email
+      }
+    })
+    if (data) {
+      res.status(400).json({
+        message: "please try again later"
+      })
+      return
     }
 
     await User.create({
@@ -171,7 +184,7 @@ class AuthController {
     }
     if (userExists.isOtpVerified !== true) {
       return res.status(403).json({
-        message: "otp is verified now you cant do this action"
+        message: "otp is successfully verified now you cant reuse this otp again"
       })
 
     }

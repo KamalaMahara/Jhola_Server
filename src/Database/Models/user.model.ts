@@ -55,4 +55,4 @@ class User extends Model {
   })
   declare isOtpVerified: boolean
 }
-export { User }
+export default User 

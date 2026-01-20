@@ -1,29 +1,21 @@
 import { Sequelize } from 'sequelize-typescript';
 import { envConfig } from '../configuration/config.js';
-import { User } from './Models/user.model.js';
-const sequelize = new Sequelize(envConfig.connectionString as string, {
-  models: [User]
-})
+import User from './models/user.model.js'; // adjust path
+
+const sequelize = new Sequelize(envConfig.connectionString, {
+  models: [User], // register explicitly
+});
+
 
 try {
-  sequelize.authenticate()
-    .then(() => {
-      console.log("authentication milyo haii")
-    })
-    .catch((err) => {
-      console.log("authentication ma error aayo", err);
-    })
-
-} catch (error) {
-  console.log(error)
+  await sequelize.authenticate();
+  console.log("connected");
+} catch (err) {
+  console.log("error", err);
 }
 
-sequelize.sync({ force: true })  //
-  .then(() => {
-    console.log("All models were synchronized successfully.");
-  })
-  .catch((err) => {
-    console.log("Model synchronization ma error aayo", err);
-  });
+sequelize.sync({ force: false, alter: false }).then(() => {
+  console.log("synced");
+});
 
 export default sequelize;

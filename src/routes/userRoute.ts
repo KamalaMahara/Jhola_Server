@@ -1,5 +1,5 @@
 import express from 'express'
-import AuthController from '../Database/Models/controller/userController.js'
+import AuthController from '../controller/userController.js'
 const router = express.Router()
 
 router.route("/register").post(AuthController.registerUser)

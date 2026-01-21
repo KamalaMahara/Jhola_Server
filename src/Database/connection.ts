@@ -1,9 +1,11 @@
 import { Sequelize } from 'sequelize-typescript';
 import { envConfig } from '../configuration/config.js';
-import User from './models/user.model.js'; // adjust path
+import User from './models/user.model.js';
+import Category from './models/categoryModel.js';
+import CategoryController from '../controller/CategoryController.js';
 
 const sequelize = new Sequelize(envConfig.connectionString, {
-  models: [User], // register explicitly
+  models: [User, Category], // register explicitly
 });
 
 
@@ -14,8 +16,9 @@ try {
   console.log("error", err);
 }
 
-sequelize.sync({ force: false, alter: false }).then(() => {
+await sequelize.sync({ force: false, alter: false }).then(async () => {
   console.log("synced");
+  await CategoryController.seedCategory()
 });
 
 export default sequelize;

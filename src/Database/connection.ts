@@ -3,9 +3,10 @@ import { envConfig } from '../configuration/config.js';
 import User from './models/user.model.js';
 import Category from './models/categoryModel.js';
 import CategoryController from '../controller/CategoryController.js';
+import Product from './models/product.Model.js';
 
 const sequelize = new Sequelize(envConfig.connectionString, {
-  models: [User, Category], // register explicitly
+  models: [User, Category, Product], // register explicitly
 });
 
 
@@ -16,9 +17,15 @@ try {
   console.log("error", err);
 }
 
-await sequelize.sync({ force: false, alter: false }).then(async () => {
+await sequelize.sync({ force: false, alter: true }).then(async () => {
   console.log("synced");
   await CategoryController.seedCategory()
 });
+
+
+//relationships//
+
+Product.belongsTo(Category)
+Category.hasOne(Product)
 
 export default sequelize;

@@ -7,7 +7,7 @@ import userRoute from './routes/userRoute.js';
 import categoryRoute from './routes/categoryRoute.js'
 
 
-app.use('/api/auth', userRoute)
-app.use("/api/category", categoryRoute)
+app.use('/', userRoute)
+app.use("/category", categoryRoute)
 
 export default app

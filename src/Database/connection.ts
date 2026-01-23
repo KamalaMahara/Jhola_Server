@@ -4,9 +4,12 @@ import User from './models/user.model.js';
 import Category from './models/categoryModel.js';
 import CategoryController from '../controller/CategoryController.js';
 import Product from './models/product.Model.js';
+import Order from './models/orderModel.js';
+import Payment from './models/paymentModel.js';
+import OrderDetail from './models/orderDetails.js';
 
 const sequelize = new Sequelize(envConfig.connectionString, {
-  models: [User, Category, Product], // register explicitly
+  models: [User, Category, Product, Order, Payment, OrderDetail], // register explicitly
 });
 
 //relationships// 

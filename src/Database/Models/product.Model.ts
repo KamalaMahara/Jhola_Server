@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType, AllowNull } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, AllowNull, ForeignKey, BelongsTo } from 'sequelize-typescript'
+import Category from './categoryModel.js';
 
 @Table({
   tableName: 'products', // yo table name vaneko supabase ko GUI ma dekhine name ho
@@ -52,6 +53,15 @@ class Product extends Model {
   })
   declare productImageUrl: string
 
+  @ForeignKey(() => Category)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false
+  })
+  categoryId!: number;
+
+  @BelongsTo(() => Category)
+  category!: Category;
 
 }
 export default Product 

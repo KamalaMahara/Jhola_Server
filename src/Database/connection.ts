@@ -9,6 +9,12 @@ const sequelize = new Sequelize(envConfig.connectionString, {
   models: [User, Category, Product], // register explicitly
 });
 
+//relationships// 
+Category.hasMany(Product, {
+  foreignKey: 'categoryId'
+});
+
+Product.belongsTo(Category, { foreignKey: 'categoryId' });
 
 try {
   await sequelize.authenticate();
@@ -23,9 +29,7 @@ await sequelize.sync({ force: false, alter: true }).then(async () => {
 });
 
 
-//relationships//
 
-Product.belongsTo(Category)
-Category.hasOne(Product)
+
 
 export default sequelize;

@@ -19,6 +19,44 @@ Category.hasMany(Product, {
 
 Product.belongsTo(Category, { foreignKey: 'categoryId' });
 
+
+// User X Order relationship  --> order table ma UserId aaunu paro
+
+User.hasMany(Order, {
+  foreignKey: 'userId'
+})
+
+Order.belongsTo(User, { foreignKey: 'userId' })
+
+//Payment X Order relationship ---.payment ma orderId
+Order.hasOne(Payment, {
+  foreignKey: "orderId"
+})
+
+Payment.belongsTo(Order, {
+  foreignKey: 'orderId'
+})
+
+// OrderDetails X Order --> OrderDetails table ma OrderId
+
+Order.hasOne(OrderDetail, {
+  foreignKey: "oderId"
+})
+
+OrderDetail.belongsTo(Order, {
+  foreignKey: "orderId"
+})
+
+//OrderDetails X Product --> oderdetails ma productId 
+
+Product.hasMany(OrderDetail, {
+  foreignKey: "productId"
+})
+
+OrderDetail.belongsTo(Product, {
+  foreignKey: "productId"
+})
+
 try {
   await sequelize.authenticate();
   console.log("connected");

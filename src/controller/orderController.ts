@@ -5,6 +5,7 @@ import Order from "../Database/models/orderModel.js"
 import OrderDetail from "../Database/models/orderDetails.js"
 import { PaymentMethods } from "../globals/types/index.js"
 import Payment from "../Database/models/paymentModel.js"
+import axios from 'axios'
 
 interface IProduct {
   productId: string,
@@ -59,7 +60,7 @@ class OrderController {
     })
 
     //for orderDetails
-    // forEach async use garnu hudaina so for..of use gareko
+    // euta user le dherai products order garna sakxa so loop use grya
     products.forEach(async function (product) {
       await OrderDetail.create({
         productId: product.productId,
@@ -70,22 +71,38 @@ class OrderController {
     })
 
     // for payment 
-    if (paymentMethod == PaymentMethods.COD) {
-      Payment.create({
-        orderId: orderDdata.id,
-        paymentMethod: paymentMethod
+    const paymentData = await Payment.create({
+      orderId: orderDdata.id,
+      paymentMethod: paymentMethod
 
+    })
+
+    if (paymentMethod == PaymentMethods.Khalti) {
+      //khalti integration  logic
+      const data = {
+        return_url: "http://localhost:5173/",
+        website_url: "http://localhost:5173",
+        amount: totalAmount * 100,
+        purchase_order_id: orderDdata.id,
+        purchase_order_name: "order_" + orderDdata.id
+      }
+      const response = await axios.post("https://dev.khalti.com/api/v2/epayment/initiate/", data, {
+        headers: {
+          Authorization: "key d972b59e9e9d497ebdc339680f78861c"
+        }
       })
-
-    } else if (paymentMethod == PaymentMethods.Khalti) {
-      //khalti logic
+      const khaltiReponse = response.data
+      paymentData.pidx = khaltiReponse.pidx
+      paymentData.save()
+      res.status(200).json({
+        message: "order created successfully",
+        url: khaltiReponse.payment_url
+      })
     }
     else {
       // esewa logic
     }
-    res.status(200).json({
-      message: "order created successfully"
-    })
+
 
   }
 

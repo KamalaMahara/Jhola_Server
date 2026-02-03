@@ -3,7 +3,7 @@
 import type { Request, Response } from "express"
 import Order from "../Database/models/orderModel.js"
 import OrderDetail from "../Database/models/orderDetails.js"
-import { PaymentMethods } from "../globals/types/index.js"
+import { PaymentMethods, PaymentStatus } from "../globals/types/index.js"
 import Payment from "../Database/models/paymentModel.js"
 import axios from 'axios'
 
@@ -81,7 +81,7 @@ class OrderController {
       //khalti integration  logic
       const data = {
         return_url: "http://localhost:5173/",
-        website_url: "http://localhost:5173",
+        website_url: "http://localhost:5173", //frontend url
         amount: totalAmount * 100,
         purchase_order_id: orderDdata.id,
         purchase_order_name: "order_" + orderDdata.id
@@ -96,12 +96,55 @@ class OrderController {
       paymentData.save()
       res.status(200).json({
         message: "order created successfully",
-        url: khaltiReponse.payment_url
+        url: khaltiReponse.payment_url,
+        pidx: khaltiReponse.pidx
+      })
+    }
+    else if (paymentMethod == PaymentMethods.Esewa) {
+      // esewa logic
+    }
+    else {
+      res.status(200).json({
+        message: "order created successfully"
+      })
+    }
+  }
+  async verifyTransaction(req: orderRequest, res: Response): Promise<void> {
+    const { pidx } = req.body
+    if (!pidx) {
+      res.status(400).json({
+        message: "please provide pidx for verification"
+      })
+      return
+    }
+
+    const response = await axios.post("https://dev.khalti.com/api/v2/epayment/lookup/", {
+      pidx: pidx
+    }, {
+      headers: {
+        Authorization: "key d972b59e9e9d497ebdc339680f78861c"
+      }
+
+    })
+    const data = response.data
+    if (data.status === "completed") {
+      await Payment.update(
+        { paymentstatus: PaymentStatus.Paid },
+        { where: { pidx } }
+      )
+
+
+
+      res.status(200).json({
+        message: "Payment verified successfully !!"
       })
     }
     else {
-      // esewa logic
+      res.status(200).json({
+        message: "payment not verified or cancelled"
+      })
     }
+
 
 
   }

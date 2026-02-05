@@ -11,10 +11,13 @@ import orderRoute from './routes/orderRoute.js'
 
 import productRoute from './routes/productRoute.js'
 
+import CartRoute from './routes/cartRoute.js'
+
 
 app.use('/', userRoute)
 app.use("/category", categoryRoute)
 app.use("/product", productRoute)
 app.use("/order", orderRoute)
+app.use("/cart", CartRoute)
 
 export default app

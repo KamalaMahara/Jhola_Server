@@ -7,9 +7,10 @@ import Product from './models/product.Model.js';
 import Order from './models/orderModel.js';
 import Payment from './models/paymentModel.js';
 import OrderDetail from './models/orderDetails.js';
+import { Cart } from './models/cartModel.js';
 
 const sequelize = new Sequelize(envConfig.connectionString, {
-  models: [User, Category, Product, Order, Payment, OrderDetail], // register explicitly
+  models: [User, Category, Product, Order, Payment, OrderDetail, Cart], // register explicitly
 });
 
 //relationships// 
@@ -40,7 +41,7 @@ Payment.belongsTo(Order, {
 // OrderDetails X Order --> OrderDetails table ma OrderId
 
 Order.hasOne(OrderDetail, {
-  foreignKey: "oderId"
+  foreignKey: "orderId"
 })
 
 OrderDetail.belongsTo(Order, {
@@ -69,8 +70,15 @@ await sequelize.sync({ force: false, alter: true }).then(async () => {
   await CategoryController.seedCategory()
 });
 
+//cart and user ko relation
+
+User.hasOne(Cart, { foreignKey: "userId" })
+Cart.belongsTo(User, { foreignKey: "userId" })
 
 
+//product and cart
+Product.hasMany(Cart, { foreignKey: "productId" }),
+  Cart.belongsTo(Product, { foreignKey: "productId" })
 
 
 export default sequelize;

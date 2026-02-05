@@ -55,10 +55,10 @@ class Product extends Model {
 
   @ForeignKey(() => Category)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false
   })
-  categoryId!: number;
+  categoryId!: string;
 
   @BelongsTo(() => Category)
   category!: Category;

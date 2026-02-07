@@ -16,7 +16,7 @@ export class Cart extends Model {
     primaryKey: true,
     defaultValue: DataType.UUIDV4
 
-  })
+  }) declare id: string
 
   @Column({
     type: DataType.INTEGER,

@@ -45,7 +45,9 @@ class CartController {
 
       await Cart.create({
         userId,
-        productId
+        productId,
+        quantity
+
       })
     }
     res.status(200).json({
@@ -88,7 +90,7 @@ class CartController {
     //check if the product exists or not
 
 
-    const product = await Product.findOne({ where: { userId, productId } }) //findOne,findById,findByPK le object return grxn
+    const product = await Product.findByPk(productId) //findOne,findById,findByPK le object return grxn
 
     if (!product) {
       res.status(404).json({
@@ -96,10 +98,16 @@ class CartController {
       })
       return
     }
+    const cartItem = await Cart.findOne({ where: { userId, productId } })
+    if (!cartItem) {
+      return res.status(404).json({ message: "Product not found in cart" })
+    }
+
     await Cart.destroy({
       where: {
         productId,
         userId
+
       }
     })
     res.status(200).json({

@@ -22,6 +22,12 @@ class Category extends Model {
   })
   declare categoryName: string;
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: true
+  })
+  declare categoryImageUrl: string;
+
 
 }
 export default Category

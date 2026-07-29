@@ -34,9 +34,7 @@ class CategoryController {
   }
 
   async addCategory(req: Request, res: Response) {
-    console.log("Headers:", req.headers);
-    console.log("Body:", req.body);
-    console.log("File:", req.file);
+
     const { categoryName } = req.body
     const fileName = req.file ? req.file.filename : "";
 

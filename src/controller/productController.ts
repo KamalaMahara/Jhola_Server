@@ -8,7 +8,7 @@ class ProductController {
   async createProduct(req: Request, res: Response): Promise<void> {
     const { productName, productDescription, productPrice, productTotalStock, productDiscount, categoryId } = req.body
 
-    console.log(req.file)
+
 
     const fileName = req.file ? req.file.filename : "";
 

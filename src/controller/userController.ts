@@ -73,8 +73,7 @@ class AuthController {
 
       } else {
         const token = generateToken(user.id)
-        console.log(user);
-        console.log("Role from DB:", user.role);
+
         res.status(200).json({
           message: "logged in success 😊",
           token,

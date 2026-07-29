@@ -149,13 +149,31 @@ class OrderController {
 
     })
     const data = response.data
-    if (data.status === "completed") {
+    if (data.status === "Completed") {
+      // 1. Mark payment as Paid
       await Payment.update(
         { paymentstatus: PaymentStatus.Paid },
         { where: { pidx } }
       )
 
+      // 2. Find the order linked to this pidx to get its orderDetails
+      const payment = await Payment.findOne({ where: { pidx } })
+      if (payment) {
+        const order = await Order.findOne({ where: { paymentId: payment.id } })
+        if (order) {
+          // 3. Fetch all order details for this order
+          const orderDetails = await OrderDetail.findAll({ where: { orderId: order.id } })
 
+          // 4. Reduce stock for each product ordered
+          for (const detail of orderDetails) {
+            const productId = (detail as any).productId
+            await Product.decrement(
+              { productTotalStock: detail.quantity },
+              { where: { id: productId } }
+            )
+          }
+        }
+      }
 
       res.status(200).json({
         message: "Payment verified successfully !!"

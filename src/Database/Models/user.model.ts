@@ -54,5 +54,11 @@ class User extends Model {
 
   })
   declare isOtpVerified: boolean
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true
+  })
+  declare profileImageUrl: string | null;
 }
 export default User 

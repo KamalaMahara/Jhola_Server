@@ -17,6 +17,12 @@ router.route("/resetpassword").post(errorHandler(AuthController.resetpassword))
 
 router.route("/users").get(errorHandler(AuthController.fetchUsers))
 
+import { multer, storage } from '../middleware/multerMiddleware.js'
+const upload = multer({ storage })
+
+router.route("/profile")
+  .get(userMiddleware.isUserLoggedIn, errorHandler(AuthController.fetchMyProfile))
+  .patch(userMiddleware.isUserLoggedIn, upload.single("profileImage"), errorHandler(AuthController.updateProfile))
 
 
 export default router

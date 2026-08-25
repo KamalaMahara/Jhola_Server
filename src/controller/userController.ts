@@ -222,6 +222,57 @@ class AuthController {
     })
   }
 
+  static async fetchMyProfile(req: Request, res: Response) {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    res.status(200).json({
+      message: "Profile fetched successfully",
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        profileImageUrl: user.profileImageUrl,
+        createdAt: user.createdAt
+      }
+    });
+  }
+
+  static async updateProfile(req: Request, res: Response) {
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { username, email } = req.body;
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const fileName = req.file ? req.file.filename : user.profileImageUrl;
+
+    await user.update({
+      username: username ?? user.username,
+      email: email ?? user.email,
+      profileImageUrl: fileName
+    });
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        profileImageUrl: user.profileImageUrl,
+        createdAt: user.createdAt
+      }
+    });
+  }
+
 
 
 }

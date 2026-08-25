@@ -34,20 +34,31 @@ class ProductController {
   }
 
   async getAllProducts(req: Request, res: Response): Promise<void> {
-    const datas = await Product.findAll({
-      // product table ma vako categoriesId lae product table sanga join garnu paryo .kinaki product table ma vayeko  sabai data aauxa ani categoriesId pani aauxa tessaile join paryo
+    const page = req.query.page ? parseInt(req.query.page as string) : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 
+    let queryOptions: any = {
       include: [
         {
           model: Category,
           attributes: ['id', 'categoryName']
         }
       ]
-    })
+    };
+
+    if (page && limit) {
+      const offset = (page - 1) * limit;
+      queryOptions.limit = limit;
+      queryOptions.offset = offset;
+    }
+
+    const { rows: datas, count } = await Product.findAndCountAll(queryOptions);
+
     res.status(200).json({
       message: "Product fetched successfully",
-      data: datas
-    })
+      data: datas,
+      totalCount: count
+    });
   }
   async getSingleProduct(req: Request, res: Response): Promise<void> {
     const { id } = req.params
